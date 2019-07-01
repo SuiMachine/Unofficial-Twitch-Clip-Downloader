@@ -1,0 +1,6 @@
+# VS crap
+.vs/*
+
+# Build crap
+bin/*
+obj/*
