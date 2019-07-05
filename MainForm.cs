@@ -30,7 +30,11 @@ namespace TwitchClipDownloader
             Config = ApplicationConfig.Load();
 
             //Setup dates
+#if DEBUG && FALSE
+            FromDateTime = DateTime.UtcNow - TimeSpan.FromDays(365);
+#else
             FromDateTime = DateTime.UtcNow - TimeSpan.FromDays(DateTime.DaysInMonth(DateTime.UtcNow.Year, DateTime.UtcNow.Month));
+#endif
             ToDateTime = DateTime.UtcNow;
 
             //Setup bindings
@@ -38,6 +42,7 @@ namespace TwitchClipDownloader
             TB_DefaulthPath.DataBindings.Add("Text", Config, "FilePath", false, DataSourceUpdateMode.OnPropertyChanged);
             dateTimePicker_FromDateTime.DataBindings.Add("Value", this, "FromDateTime", false, DataSourceUpdateMode.OnPropertyChanged);
             dateTimePicker_ToDateTime.DataBindings.Add("Value", this, "ToDateTime", false, DataSourceUpdateMode.OnPropertyChanged);
+            NBS_ClipLimit.DataBindings.Add("Value", Config, "ClipLimit", false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private void B_SaveUsername_Click(object sender, EventArgs e)
@@ -63,7 +68,7 @@ namespace TwitchClipDownloader
 
         private void B_GetClips_Click(object sender, EventArgs e)
         {
-            VideoPicker vpicker = new VideoPicker(Config.UserName, Config.FilePath, FromDateTime, ToDateTime);
+            VideoPicker vpicker = new VideoPicker(Config.UserName, Config.FilePath, Config.ClipLimit, FromDateTime, ToDateTime);
             vpicker.ShowDialog();
 
 

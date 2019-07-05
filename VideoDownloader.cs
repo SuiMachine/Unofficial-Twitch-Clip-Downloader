@@ -39,14 +39,20 @@ namespace TwitchClipDownloader
             return null;
         }
 
-        public TwitchVideo[] GetVideos(ulong BroadcasterID, DateTime? FromDate, DateTime? ToDate)
+        public TwitchVideo[] GetVideos(ulong BroadcasterID, uint ClipLimit, DateTime? FromDate, DateTime? ToDate, uint Start = 0)
         {
+            bool isMoreThan100Clips = ClipLimit > 100 || ClipLimit == 0; //Currently not used
+
             var QueryParams = new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("broadcaster_id", BroadcasterID.ToString()) };
             if(FromDate != null && ToDate != null)
             {
                 QueryParams.Add(new KeyValuePair<string, string>("started_at", ((DateTime)FromDate).ToRfc3339String()));
                 QueryParams.Add(new KeyValuePair<string, string>("ended_at", ((DateTime)ToDate).ToRfc3339String()));
             }
+            if(isMoreThan100Clips)
+                QueryParams.Add(new KeyValuePair<string, string>("first", "100"));
+            else
+                QueryParams.Add(new KeyValuePair<string, string>("first", ClipLimit.ToString()));
 
             Vp.InvokeStatusUpdate("Getting list of clips...", System.Drawing.Color.Green);
             if (JsonGrabber.GrabJson(
@@ -79,6 +85,7 @@ namespace TwitchClipDownloader
                         var downloadLink = GetDownloadLink(id);
                         vids.Add(new TwitchVideo(id, date, title, game, new Uri(previewLink), new Uri(downloadLink)));
                     }
+
                     var translationDictionary = this.GetIDToGameNameDictionary(gameIDs.ToArray());
                     if(translationDictionary != null)
                     {

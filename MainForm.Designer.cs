@@ -39,6 +39,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.TB_DefaulthPath = new System.Windows.Forms.TextBox();
             this.B_BrowsePath = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.NBS_ClipLimit = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.NBS_ClipLimit)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -101,7 +104,7 @@
             // 
             // B_SaveUsername
             // 
-            this.B_SaveUsername.Location = new System.Drawing.Point(12, 109);
+            this.B_SaveUsername.Location = new System.Drawing.Point(224, 109);
             this.B_SaveUsername.Name = "B_SaveUsername";
             this.B_SaveUsername.Size = new System.Drawing.Size(93, 23);
             this.B_SaveUsername.TabIndex = 8;
@@ -135,11 +138,39 @@
             this.B_BrowsePath.UseVisualStyleBackColor = true;
             this.B_BrowsePath.Click += new System.EventHandler(this.B_BrowsePath_Click);
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 113);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(47, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Clip limit:";
+            // 
+            // NBS_ClipLimit
+            // 
+            this.NBS_ClipLimit.Location = new System.Drawing.Point(65, 111);
+            this.NBS_ClipLimit.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NBS_ClipLimit.Name = "NBS_ClipLimit";
+            this.NBS_ClipLimit.Size = new System.Drawing.Size(153, 20);
+            this.NBS_ClipLimit.TabIndex = 13;
+            this.NBS_ClipLimit.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(409, 140);
+            this.ClientSize = new System.Drawing.Size(411, 140);
+            this.Controls.Add(this.NBS_ClipLimit);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.B_BrowsePath);
             this.Controls.Add(this.TB_DefaulthPath);
             this.Controls.Add(this.label4);
@@ -157,6 +188,7 @@
             this.Name = "MainForm";
             this.Text = "Twitch Clip Downloader";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.NBS_ClipLimit)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -174,6 +206,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox TB_DefaulthPath;
         private System.Windows.Forms.Button B_BrowsePath;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown NBS_ClipLimit;
     }
 }
 

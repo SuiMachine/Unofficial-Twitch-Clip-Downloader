@@ -14,8 +14,9 @@ namespace TwitchClipDownloader
 {
     public partial class VideoPicker : Form
     {
-        string userName;
+        string UserName;
         public string Path { get; set; }
+        uint ClipLimit;
         DateTime FromDateTime;
         DateTime ToDateTime;
         TwitchVideo[] videos;
@@ -27,11 +28,12 @@ namespace TwitchClipDownloader
 
 
 
-        public VideoPicker(string userName, string path, DateTime FromDateTime, DateTime ToDateTime)
+        public VideoPicker(string UserName, string Path, uint ClipLimit, DateTime FromDateTime, DateTime ToDateTime)
         {
             InitializeComponent();
-            this.userName = userName;
-            this.Path = path;
+            this.UserName = UserName;
+            this.Path = Path;
+            this.ClipLimit = ClipLimit;
             this.FromDateTime = FromDateTime;
             this.ToDateTime = ToDateTime;
         }
@@ -109,7 +111,7 @@ namespace TwitchClipDownloader
 
             VideoDownloader vd = new VideoDownloader(this);
 
-            var twitchUsernameId = vd.GetBroadcasterID(userName);
+            var twitchUsernameId = vd.GetBroadcasterID(UserName);
 
             //Something went wrong when obtaining Twitch username ID!
             if (twitchUsernameId == null)
@@ -119,7 +121,7 @@ namespace TwitchClipDownloader
                 return;
             }
 
-            videos = vd.GetVideos((ulong)twitchUsernameId, FromDateTime, ToDateTime);
+            videos = vd.GetVideos((ulong)twitchUsernameId, ClipLimit, FromDateTime, ToDateTime);
             InvokeSetupTable(videos);
             InvokeSetComplete();
             InvokeStatusUpdate("Done. Awaiting user input.", Color.DarkGray);
