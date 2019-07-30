@@ -164,7 +164,7 @@ namespace TwitchClipDownloader
             for(int i=0; i<downloadList.Count; i++)
             {
                 InvokeStatusUpdate(string.Format("Downloading video {0} / {1}", i + 1, downloadList.Count), Color.DarkGray);
-                FileDownloader.Download(downloadList[i].DownloadUri, Path);
+                FileDownloader.Download(downloadList[i], Path);
             }
 
             InvokeStatusUpdate("Done. Awaiting user input.", Color.DarkGray);
