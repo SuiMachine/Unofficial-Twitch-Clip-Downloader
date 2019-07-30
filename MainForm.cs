@@ -15,8 +15,8 @@ namespace TwitchClipDownloader
     public partial class MainForm : Form
     {
         public ApplicationConfig Config { get; private set; }
-        public DateTime FromDateTime { get; private set; }
-        public DateTime ToDateTime { get; private set; }
+        public DateTime FromDateTime { get; set; }
+        public DateTime ToDateTime { get; set; }
 
 
 
