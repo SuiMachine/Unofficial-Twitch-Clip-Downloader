@@ -39,15 +39,15 @@ namespace TwitchClipDownloader
             return null;
         }
 
-        public TwitchVideo[] GetVideos(ulong BroadcasterID, uint ClipLimit, DateTime? FromDate, DateTime? ToDate, uint Start = 0)
+        public TwitchVideo[] GetVideos(ulong BroadcasterID, uint ClipLimit, DateTime FromDate, DateTime ToDate)
         {
             bool isMoreThan100Clips = ClipLimit > 100 || ClipLimit == 0; //Currently not used
 
             var QueryParams = new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("broadcaster_id", BroadcasterID.ToString()) };
             if(FromDate != null && ToDate != null)
             {
-                QueryParams.Add(new KeyValuePair<string, string>("started_at", ((DateTime)FromDate).ToRfc3339String()));
-                QueryParams.Add(new KeyValuePair<string, string>("ended_at", ((DateTime)ToDate).ToRfc3339String()));
+                QueryParams.Add(new KeyValuePair<string, string>("started_at", FromDate.ToRfc3339String()));
+                QueryParams.Add(new KeyValuePair<string, string>("ended_at", ToDate.ToRfc3339String()));
             }
             if(isMoreThan100Clips)
                 QueryParams.Add(new KeyValuePair<string, string>("first", "100"));
@@ -68,32 +68,24 @@ namespace TwitchClipDownloader
                 if (dataNode != null)
                 {
                     var videosNode = dataNode.Children().First();
+
                     List<TwitchVideo> vids = new List<TwitchVideo>();
-                    List<string> gameIDs = new List<string>();
-
-                    for(int i=0; i<videosNode.Children().Count(); i++)
+                    if (isMoreThan100Clips && videosNode.Count() == 100)
                     {
-                        var id = videosNode.Children().ElementAt(i)["id"].ToString();
-                        var date = videosNode.Children().ElementAt(i)["created_at"].ToString();
-                        var game = videosNode.Children().ElementAt(i)["game_id"].ToString();
-                        if (!gameIDs.Contains(game))
-                            gameIDs.Add(game);
-                        var title = videosNode.Children().ElementAt(i)["title"].ToString();
-                        var previewLink = videosNode.Children().ElementAt(i)["url"].ToString();
-
-                        Vp.InvokeStatusUpdate(string.Format("Getting download link for video {0} / {1}", i + 1, videosNode.Children().Count()), System.Drawing.Color.Green);
-                        var downloadLink = GetDownloadLink(id);
-                        vids.Add(new TwitchVideo(id, date, title, game, new Uri(previewLink), new Uri(downloadLink)));
+                        var timeRange = ((ToDate - FromDate).TotalMinutes) / 2;
+                        vids.AddRange(GetVideos(BroadcasterID, 0, FromDate, FromDate + TimeSpan.FromMinutes(timeRange)));
+                        vids.AddRange(GetVideos(BroadcasterID, 0, FromDate + TimeSpan.FromMinutes(timeRange), ToDate));
                     }
-
-                    var translationDictionary = this.GetIDToGameNameDictionary(gameIDs.ToArray());
-                    if(translationDictionary != null)
+                    else
                     {
-                        foreach(var vid in vids)
+                        for (int i = 0; i < videosNode.Children().Count(); i++)
                         {
-                            //Translate IDs to game titles
-                            if (translationDictionary.ContainsKey(vid.Game))
-                                vid.Game = translationDictionary[vid.Game];
+                            var id = videosNode.Children().ElementAt(i)["id"].ToString();
+                            var date = videosNode.Children().ElementAt(i)["created_at"].ToString();
+                            var game = videosNode.Children().ElementAt(i)["game_id"].ToString();
+                            var title = videosNode.Children().ElementAt(i)["title"].ToString();
+                            var previewLink = videosNode.Children().ElementAt(i)["url"].ToString();
+                            vids.Add(new TwitchVideo(id, date, title, game, new Uri(previewLink), null));
                         }
                     }
 
@@ -109,7 +101,43 @@ namespace TwitchClipDownloader
             return null;
         }
 
-        public Dictionary<string, string> GetIDToGameNameDictionary(string[] gameIDsArray)
+        public void TranslateGameIDsToNames(TwitchVideo[] vids)
+        {
+            List<string> gameIDs = new List<string>();
+            for(int i=0; i<vids.Length; i++)
+            {
+                if(!gameIDs.Contains(vids[i].Game))
+                    gameIDs.Add(vids[i].Game);
+
+            }
+
+
+            var translationDictionary = this.GetIDToGameNameDictionary(gameIDs.ToArray());
+
+            //Translate IDs to Game Names
+            if (translationDictionary != null)
+            {
+                foreach (var vid in vids)
+                {
+                    //Translate IDs to game titles
+                    if (translationDictionary.ContainsKey(vid.Game))
+                        vid.Game = translationDictionary[vid.Game];
+                }
+            }
+        }
+
+        public void GetDownloadLinks(TwitchVideo[] vids)
+        {
+            int i = 1;
+            foreach(var vid in vids)
+            {
+                Vp.InvokeStatusUpdate(string.Format("Getting download link for video {0} / {1}", i, vids.Length), System.Drawing.Color.Green);
+                vid.DownloadUri = new Uri(GetDownloadLink(vid.ID));
+                i++;
+            }
+        }
+
+        private Dictionary<string, string> GetIDToGameNameDictionary(string[] gameIDsArray)
         {
             Vp.InvokeStatusUpdate("Getting game names to translate game IDs...", System.Drawing.Color.Green);
             var querryStrings = new List<KeyValuePair<string, string>>();
@@ -150,7 +178,7 @@ namespace TwitchClipDownloader
             return new Dictionary<string, string>();
         }
 
-        public string GetDownloadLink(string SLUG)
+        private string GetDownloadLink(string SLUG)
         {
             if (JsonGrabber.GrabClipJson(SLUG, out string res))
             {

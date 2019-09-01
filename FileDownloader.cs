@@ -19,7 +19,16 @@ namespace TwitchClipDownloader
                 var dateWinFormat = DateTime.Parse(Video.CreationDate).ToString("yyyy.MM.dd");
                 var safeGameTitle = GetIOSafePath(Video.Game);
                 var safeClipName = GetIOSafePath(Video.ClipName);
-                wb.DownloadFile(Video.DownloadUri.ToString(), Path.Combine(Directory, string.Format("{0} - {1} - {2}.mp4", dateWinFormat, safeGameTitle, safeClipName)));
+                var download_path = Path.Combine(Directory, string.Format("{0} - {1} - {2}.mp4", dateWinFormat, safeGameTitle, safeClipName));
+                while(File.Exists(download_path))
+                {
+                    var dir = Path.GetDirectoryName(download_path);
+                    var filename = Path.GetFileNameWithoutExtension(download_path) + new Random().Next(0, 10);
+                    var extansion = Path.GetExtension(download_path);
+                    download_path = Path.Combine(dir, filename) + extansion;
+                }
+
+                wb.DownloadFile(Video.DownloadUri.ToString(), download_path);
             }
         }
 

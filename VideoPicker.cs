@@ -121,7 +121,25 @@ namespace TwitchClipDownloader
                 return;
             }
 
+            //It's recuresive now to make sure it downloads all videos
             videos = vd.GetVideos((ulong)twitchUsernameId, ClipLimit, FromDateTime, ToDateTime);
+
+            //Trim the list to only specified amount of clips
+            if(ClipLimit != 0)
+            {
+                TwitchVideo[] vidTemp = new TwitchVideo[ClipLimit];
+                for (int i = 0; i < vidTemp.Length; i++)
+                {
+                    vidTemp[i] = videos[i];
+                }
+                videos = vidTemp;
+            }
+
+            //Used to be part of GetVideos, but was moved outside in order to make the recuresive function fast
+            vd.GetDownloadLinks(videos);
+            vd.TranslateGameIDsToNames(videos);
+
+            //Sets up table with videos
             InvokeSetupTable(videos);
             InvokeSetComplete();
             InvokeStatusUpdate("Done. Awaiting user input.", Color.DarkGray);
