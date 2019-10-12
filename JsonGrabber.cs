@@ -44,7 +44,7 @@ namespace TwitchClipDownloader
             Uri address = new Uri("https://clips.twitch.tv/api/v1/clips/" + SLUG + "/status");
             //Dictionary<string, string> headers = new Dictionary<string, string>();
             ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12;
 
 
             var sleep = (lastRequest + TimeSpan.FromSeconds(1) - DateTime.UtcNow).TotalMilliseconds;
@@ -82,7 +82,7 @@ namespace TwitchClipDownloader
                 System.Threading.Thread.Sleep((int)sleep);
 
             ServicePointManager.Expect100Continue = OriginalExpect100Continue;
-            ServicePointManager.SecurityProtocol = OriginalSecurityProtocol;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12;
 
             try
             {
@@ -124,7 +124,7 @@ namespace TwitchClipDownloader
                 lastRequest = DateTime.UtcNow;
                 return true;
             }
-            catch
+            catch(Exception e)
             {
                 result = "";
                 lastRequest = DateTime.UtcNow;
