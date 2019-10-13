@@ -13,10 +13,6 @@ namespace TwitchClipDownloader
     {
         static KeyValuePair<string, string> clientIDHeader = new KeyValuePair<string, string>("Client-ID", "llyidmsqifdz79kqkegwtv5lt11h2c");
         static DateTime lastRequest = DateTime.UtcNow;
-        static readonly bool OriginalExpect100Continue = ServicePointManager.Expect100Continue;
-        static readonly SecurityProtocolType OriginalSecurityProtocol = ServicePointManager.SecurityProtocol;
-
-
 
         public static Uri GetPathHelix(string endpoint, List<KeyValuePair<string, string>> queryStrings = null)
         {
@@ -43,8 +39,6 @@ namespace TwitchClipDownloader
         {
             Uri address = new Uri("https://clips.twitch.tv/api/v1/clips/" + SLUG + "/status");
             //Dictionary<string, string> headers = new Dictionary<string, string>();
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12;
 
 
             var sleep = (lastRequest + TimeSpan.FromSeconds(1) - DateTime.UtcNow).TotalMilliseconds;
@@ -80,9 +74,6 @@ namespace TwitchClipDownloader
             var sleep = (lastRequest + TimeSpan.FromSeconds(1) - DateTime.UtcNow).TotalMilliseconds;
             if (sleep > 0)
                 System.Threading.Thread.Sleep((int)sleep);
-
-            ServicePointManager.Expect100Continue = OriginalExpect100Continue;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12;
 
             try
             {
