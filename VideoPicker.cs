@@ -70,15 +70,38 @@ namespace TwitchClipDownloader
             }
             else
             {
-                TableLayoutPanel panel = new TableLayoutPanel() { Dock = DockStyle.Fill, AutoScroll = true, CellBorderStyle = TableLayoutPanelCellBorderStyle.Single };
+                TableLayoutPanel panel = new TableLayoutPanel() { Dock = DockStyle.Fill, AutoScroll = true, CellBorderStyle = TableLayoutPanelCellBorderStyle.Single, ColumnCount = 5 };
 
                 var controls = panel.Controls;
                 controls.Clear();
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80));
                 controls.Add(new Label() { Text = "Date / Time" }, 0, 0);
+
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
                 controls.Add(new Label() { Text = "Title" }, 1, 0);
+
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30));
                 controls.Add(new Label() { Text = "Game" }, 2, 0);
+
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80));
                 controls.Add(new Label() { Text = "Preview" }, 3, 0);
-                controls.Add(new Label() { Text = "Download" }, 4, 0);
+
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80));
+                var checkDownload = new CheckBox() { Text = "Download" };
+                checkDownload.CheckedChanged += (object snd, EventArgs eArgs) =>
+                {
+                    for(int i=1; i<panel.RowCount; i++)
+                    {
+                        //Stupid binding doesn't work :-/
+                        var elementFromTable = panel.GetControlFromPosition(4, i);
+                        if(elementFromTable.GetType() == typeof(CheckBox))
+                        {
+                            var cast = (CheckBox)elementFromTable;
+                            cast.Checked = checkDownload.Checked;
+                        }
+                    }
+                };
+                controls.Add(checkDownload, 4, 0);
 
 
                 for (int i = 0; i < videos.Length; i++)
@@ -99,6 +122,7 @@ namespace TwitchClipDownloader
                     var downloadCB = new CheckBox() { Text = "" };
                     downloadCB.DataBindings.Add("Checked", videos[i], "Download", false, DataSourceUpdateMode.OnPropertyChanged);
                     controls.Add(downloadCB, 4, i + 1);
+                    panel.RowCount = i + 2;
                 }
 
                 panel_Content.Controls.Add(panel);
@@ -127,6 +151,7 @@ namespace TwitchClipDownloader
             //Trim the list to only specified amount of clips
             if(ClipLimit != 0)
             {
+                //TODO: This can fail. Probably needs to be reworked.
                 TwitchVideo[] vidTemp = new TwitchVideo[ClipLimit];
                 for (int i = 0; i < vidTemp.Length; i++)
                 {
@@ -147,8 +172,6 @@ namespace TwitchClipDownloader
 
         private void InvokeSetComplete()
         {
-            InvokeStatusUpdate("Building download list...", Color.DarkGray);
-
             if (B_Download.InvokeRequired)
             {
                 SetCompleteDelegate d = new SetCompleteDelegate(InvokeSetComplete);

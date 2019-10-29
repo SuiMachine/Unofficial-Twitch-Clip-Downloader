@@ -52,7 +52,7 @@ namespace TwitchClipDownloader
             if(isMoreThan100Clips)
                 QueryParams.Add(new KeyValuePair<string, string>("first", "100"));
             else
-                QueryParams.Add(new KeyValuePair<string, string>("first", ClipLimit.ToString()));
+                QueryParams.Add(new KeyValuePair<string, string>("first", (ClipLimit +1).ToString()));  //Cause sometimes it returns 1 less
 
             Vp.InvokeStatusUpdate("Getting list of clips...", System.Drawing.Color.Green);
             if (JsonGrabber.GrabJson(
