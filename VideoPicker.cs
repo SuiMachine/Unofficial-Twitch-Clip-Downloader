@@ -107,8 +107,8 @@ namespace TwitchClipDownloader
                 for (int i = 0; i < videos.Length; i++)
                 {
                     controls.Add(new Label() { Text = videos[i].CreationDate }, 0, i + 1);
-                    controls.Add(new Label() { Text = videos[i].ClipName }, 1, i + 1);
-                    controls.Add(new Label() { Text = videos[i].Game }, 2, i + 1);
+                    controls.Add(new Label() { Text = videos[i].ClipName, Dock = DockStyle.Top }, 1, i + 1);
+                    controls.Add(new Label() { Text = videos[i].Game, Dock = DockStyle.Top }, 2, i + 1);
 
                     //preview button
                     var button = new Button() { Text = "", Name = videos[i].PreviewUri.ToString() };

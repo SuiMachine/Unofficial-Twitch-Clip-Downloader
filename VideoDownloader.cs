@@ -182,15 +182,7 @@ namespace TwitchClipDownloader
         {
             if (JsonGrabber.GrabClipJson(SLUG, out string res))
             {
-                var response = JObject.Parse(res);
-                var dataNode = response.Children().FirstOrDefault(x => x.Path == "quality_options");
-                if(dataNode != null)
-                {
-                    //Json is stoopid
-                    var bestQuality = dataNode.Children().First().Children().First();
-                    var downloadLink = bestQuality["source"];
-                    return downloadLink != null ? downloadLink.ToString() : "ERROR";
-                }
+                return res;
             }
 
             return "ERROR";

@@ -23,6 +23,7 @@ namespace TwitchClipDownloader
 
         public MainForm()
         {
+            OffscreenBrowser.Initialize();
             InitializeComponent();
         }
 

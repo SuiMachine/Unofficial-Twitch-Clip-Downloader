@@ -4,3 +4,6 @@
 # Build crap
 bin/*
 obj/*
+
+# packages (sorry)
+packages/*
