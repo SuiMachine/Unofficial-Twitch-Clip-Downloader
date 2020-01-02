@@ -75,7 +75,7 @@ namespace TwitchClipDownloader
                 var controls = panel.Controls;
                 controls.Clear();
                 panel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80));
-                controls.Add(new Label() { Text = "Date / Time" }, 0, 0);
+                controls.Add(new Label() { Text = "Date" }, 0, 0);
 
                 panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
                 controls.Add(new Label() { Text = "Title" }, 1, 0);
@@ -106,7 +106,7 @@ namespace TwitchClipDownloader
 
                 for (int i = 0; i < videos.Length; i++)
                 {
-                    controls.Add(new Label() { Text = videos[i].CreationDate }, 0, i + 1);
+                    controls.Add(new Label() { Text = videos[i].CreationDate.ToString("yyyy.MM.dd") }, 0, i + 1);
                     controls.Add(new Label() { Text = videos[i].ClipName, Dock = DockStyle.Top }, 1, i + 1);
                     controls.Add(new Label() { Text = videos[i].Game, Dock = DockStyle.Top }, 2, i + 1);
 
@@ -132,7 +132,6 @@ namespace TwitchClipDownloader
 
         private void PerformGetVideosThread()
         {
-
             VideoDownloader vd = new VideoDownloader(this);
 
             var twitchUsernameId = vd.GetBroadcasterID(UserName);
@@ -164,8 +163,14 @@ namespace TwitchClipDownloader
             vd.GetDownloadLinks(videos);
             vd.TranslateGameIDsToNames(videos);
 
+            //Sort by time
+            InvokeStatusUpdate("Sorting...", Color.Blue);
+            videos = videos.OrderBy(x => x.CreationDate).ToArray();
+
             //Sets up table with videos
             InvokeSetupTable(videos);
+
+
             InvokeSetComplete();
             InvokeStatusUpdate("Done. Awaiting user input.", Color.DarkGray);
         }

@@ -19,11 +19,9 @@ namespace TwitchClipDownloader
         public DateTime FromDateTime { get; set; }
         public DateTime ToDateTime { get; set; }
 
-
-
         public MainForm()
         {
-            OffscreenBrowser.Initialize();
+            OffscreenBrowserStatic.Initialize();
             InitializeComponent();
         }
 
@@ -34,6 +32,11 @@ namespace TwitchClipDownloader
             //Setup dates
             FromDateTime = DateTime.UtcNow - TimeSpan.FromDays(DateTime.DaysInMonth(DateTime.UtcNow.Year, DateTime.UtcNow.Month));
             ToDateTime = DateTime.UtcNow;
+
+#if DEBUG && FALSE
+            FromDateTime = DateTime.Parse("01.12.2019 00:04:15");
+            ToDateTime = DateTime.Parse("01.12.2019 23:04:15");
+#endif
 
             //Setup bindings
             TB_Username.DataBindings.Add("Text", Config, "UserName", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -71,6 +74,10 @@ namespace TwitchClipDownloader
 
         private void B_GetClips_Click(object sender, EventArgs e)
         {
+            //We don't want to deal with time - just dates, so round it up to first second of the day for "FromDateTime" and last second of the day for ToDateTime, this way if we choose same day in both fields, we pretty much ned up with entire day selected... UTC time.
+            FromDateTime = FromDateTime.Date;
+            ToDateTime = ToDateTime.Date.AddDays(1).Subtract(TimeSpan.FromSeconds(1));
+
             VideoPicker vpicker = new VideoPicker(Config.UserName, Config.FilePath, Config.ClipLimit, FromDateTime, ToDateTime);
             vpicker.ShowDialog();
 

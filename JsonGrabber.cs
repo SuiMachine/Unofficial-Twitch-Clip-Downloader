@@ -40,10 +40,11 @@ namespace TwitchClipDownloader
                 return new Uri("https://api.twitch.tv/helix/" + string.Join("/", endpoint));
         }
 
+        private static string lastSLUG = "";
+
         public static bool GrabClipJson(string SLUG,  out string result)
         {
             Uri address = new Uri("https://clips.twitch.tv/embed?clip=" + SLUG);
-            //Dictionary<string, string> headers = new Dictionary<string, string>();
 
 
             var sleep = (lastRequest + TimeSpan.FromSeconds(1) - DateTime.UtcNow).TotalMilliseconds;
@@ -54,6 +55,7 @@ namespace TwitchClipDownloader
                 lastRequest = DateTime.UtcNow;
 
                 result = GetBestQualityFromPage(address.ToString());
+                lastSLUG = SLUG;
                 return true;
             }
             catch(Exception e)
@@ -66,42 +68,50 @@ namespace TwitchClipDownloader
 
         private static string GetBestQualityFromPage(string address)
         {
-
-            OffscreenBrowser.Browser.Load(address);
-            while (OffscreenBrowser.Browser.IsLoading)
-                System.Threading.Thread.Sleep(100);
-
-            while (!OffscreenBrowser.Browser.GetSourceAsync().GetAwaiter().GetResult().Contains(".mp4"))
-                System.Threading.Thread.Sleep(500);
-
-            var qualities = OffscreenBrowser.Browser.EvaluateScriptAsync("player.getQualities()").GetAwaiter().GetResult();
-            var results = (List<object>)qualities.Result;
-
-            int bestQuality = 0;
-            var best = (dynamic)results.First();
-
-            for(int i=0; i<results.Count; i++)
+            using(var OffscreenBrowser = new OffscreenBrowser())
             {
-                var quality = (dynamic)results[i];
-                string name = quality.name;
-                if (name.EndsWith("p"))
-                    name = name.Remove(name.LastIndexOf("p"));
-                int qualityNumber = 0;
+                while (!OffscreenBrowser.Browser.IsBrowserInitialized)
+                    System.Threading.Thread.Sleep(1);
 
-                if(!int.TryParse(name, out qualityNumber))
+
+                OffscreenBrowser.Browser.Load(address);
+
+
+                while (OffscreenBrowser.Browser.IsLoading)
+                    System.Threading.Thread.Sleep(100);
+
+                while (!OffscreenBrowser.Browser.GetSourceAsync().GetAwaiter().GetResult().Contains(".mp4"))
+                    System.Threading.Thread.Sleep(500);
+
+                var qualities = OffscreenBrowser.Browser.EvaluateScriptAsync("player.getQualities()").GetAwaiter().GetResult();
+                var results = (List<object>)qualities.Result;
+
+                int bestQuality = 0;
+                var best = (dynamic)results.First();
+
+                for (int i = 0; i < results.Count; i++)
                 {
-                    MessageBox.Show(string.Format("Can't parse quality name for {0}. Quality = {1}", address, name), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return "Error";
+                    var quality = (dynamic)results[i];
+                    string name = quality.name;
+                    if (name.EndsWith("p"))
+                        name = name.Remove(name.LastIndexOf("p"));
+                    int qualityNumber = 0;
+
+                    if (!int.TryParse(name, out qualityNumber))
+                    {
+                        MessageBox.Show(string.Format("Can't parse quality name for {0}. Quality = {1}", address, name), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return "Error";
+                    }
+
+                    if (qualityNumber > bestQuality)
+                    {
+                        bestQuality = qualityNumber;
+                        best = quality;
+                    }
                 }
 
-                if(qualityNumber > bestQuality)
-                {
-                    bestQuality = qualityNumber;
-                    best = quality;
-                }
+                return best.source;
             }
-
-            return best.source;
         }
 
         private static string GetPageSource(ChromiumWebBrowser browser)

@@ -12,18 +12,17 @@ namespace TwitchClipDownloader
         public Uri DownloadUri { get; set; }
         public Uri PreviewUri { get; set; }
 
-        public string CreationDate { get; set; }
+        public DateTime CreationDate { get; set; }
         public string ClipName { get; set; }
         public string Game { get; set; }
         public string ID { get; set; }
-
 
         public static readonly int COLUMNCOUNT = 5;
 
         public TwitchVideo(string ID, string CreationDate, string ClipName, string Game, Uri PreviewUri, Uri DownloadUri)
         {
             this.ID = ID;
-            this.CreationDate = CreationDate;
+            this.CreationDate = DateTime.Parse(CreationDate);
             this.ClipName = ClipName;
             this.Game = Game;
             this.PreviewUri = PreviewUri;
