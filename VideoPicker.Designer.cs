@@ -144,6 +144,7 @@
             this.MinimumSize = new System.Drawing.Size(410, 320);
             this.Name = "VideoPicker";
             this.Text = "Video Picker";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VideoPicker_FormClosing);
             this.Load += new System.EventHandler(this.VideoPicker_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

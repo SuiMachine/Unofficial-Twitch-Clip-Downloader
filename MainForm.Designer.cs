@@ -208,7 +208,7 @@
             this.link_TwitchLegal.AutoSize = true;
             this.link_TwitchLegal.Location = new System.Drawing.Point(4, 143);
             this.link_TwitchLegal.Name = "link_TwitchLegal";
-            this.link_TwitchLegal.Size = new System.Drawing.Size(396, 39);
+            this.link_TwitchLegal.Size = new System.Drawing.Size(377, 39);
             this.link_TwitchLegal.TabIndex = 2;
             this.link_TwitchLegal.TabStop = true;
             this.link_TwitchLegal.Text = resources.GetString("link_TwitchLegal.Text");

@@ -132,6 +132,7 @@ namespace TwitchClipDownloader
 
         private void PerformGetVideosThread()
         {
+            
             VideoDownloader vd = new VideoDownloader(this);
 
             var twitchUsernameId = vd.GetBroadcasterID(UserName);
@@ -150,8 +151,8 @@ namespace TwitchClipDownloader
             //Trim the list to only specified amount of clips
             if(ClipLimit != 0)
             {
-                //TODO: This can fail. Probably needs to be reworked.
-                TwitchVideo[] vidTemp = new TwitchVideo[ClipLimit];
+                var arrayClipAmount = ClipLimit > videos.Length ? (uint)videos.Length : ClipLimit;
+                TwitchVideo[] vidTemp = new TwitchVideo[arrayClipAmount];
                 for (int i = 0; i < vidTemp.Length; i++)
                 {
                     vidTemp[i] = videos[i];
@@ -190,7 +191,12 @@ namespace TwitchClipDownloader
 
         private void B_Cancel_Click(object sender, EventArgs e)
         {
-            if(workerThread != null)
+            CloseWindow();
+        }
+
+        private void CloseWindow()
+        {
+            if (workerThread != null && workerThread.ThreadState == System.Threading.ThreadState.Running)
             {
                 workerThread.Abort();
             }
@@ -224,6 +230,11 @@ namespace TwitchClipDownloader
             workerThread = new Thread(DownloadThread);
             workerThread.Start();
             B_Download.Enabled = false;
+        }
+
+        private void VideoPicker_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            CloseWindow();
         }
     }
 }

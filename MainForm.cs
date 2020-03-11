@@ -33,11 +33,6 @@ namespace TwitchClipDownloader
             FromDateTime = DateTime.UtcNow - TimeSpan.FromDays(DateTime.DaysInMonth(DateTime.UtcNow.Year, DateTime.UtcNow.Month));
             ToDateTime = DateTime.UtcNow;
 
-#if DEBUG && FALSE
-            FromDateTime = DateTime.Parse("01.12.2019 00:04:15");
-            ToDateTime = DateTime.Parse("01.12.2019 23:04:15");
-#endif
-
             //Setup bindings
             TB_Username.DataBindings.Add("Text", Config, "UserName", false, DataSourceUpdateMode.OnPropertyChanged);
             TB_DefaulthPath.DataBindings.Add("Text", Config, "FilePath", false, DataSourceUpdateMode.OnPropertyChanged);

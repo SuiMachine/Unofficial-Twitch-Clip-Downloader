@@ -11,15 +11,18 @@ namespace TwitchClipDownloader
 {
     static class FileDownloader
     {
-        public static void Download(TwitchVideo Video, string Directory)
+        public static void Download(TwitchVideo Video, string Directory_Path)
         {
 
             using(WebClient wb = new WebClient())
             {
+                if (!Directory.Exists(Directory_Path))
+                    Directory.CreateDirectory(Directory_Path);
+
                 var dateWinFormat = Video.CreationDate.ToString("yyyy.MM.dd");
                 var safeGameTitle = GetIOSafePath(Video.Game);
                 var safeClipName = GetIOSafePath(Video.ClipName);
-                var download_path = Path.Combine(Directory, string.Format("{0} - {1} - {2}.mp4", dateWinFormat, safeGameTitle, safeClipName));
+                var download_path = Path.Combine(Directory_Path, string.Format("{0} - {1} - {2}.mp4", dateWinFormat, safeGameTitle, safeClipName));
                 while(File.Exists(download_path))
                 {
                     var dir = Path.GetDirectoryName(download_path);

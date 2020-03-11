@@ -70,7 +70,7 @@ namespace TwitchClipDownloader
                     var videosNode = dataNode.Children().First();
 
                     List<TwitchVideo> vids = new List<TwitchVideo>();
-                    if (isMoreThan100Clips && videosNode.Count() == 100)
+                    if (isMoreThan100Clips && videosNode.Count() > 75)
                     {
                         var timeRange = ((ToDate - FromDate).TotalMinutes) / 2;
                         vids.AddRange(GetVideos(BroadcasterID, 0, FromDate, FromDate + TimeSpan.FromMinutes(timeRange)));
@@ -108,7 +108,6 @@ namespace TwitchClipDownloader
             {
                 if(!gameIDs.Contains(vids[i].Game))
                     gameIDs.Add(vids[i].Game);
-
             }
 
 
