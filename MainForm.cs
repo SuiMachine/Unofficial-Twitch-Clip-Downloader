@@ -69,14 +69,35 @@ namespace TwitchClipDownloader
 
         private void B_GetClips_Click(object sender, EventArgs e)
         {
-            //We don't want to deal with time - just dates, so round it up to first second of the day for "FromDateTime" and last second of the day for ToDateTime, this way if we choose same day in both fields, we pretty much ned up with entire day selected... UTC time.
-            FromDateTime = FromDateTime.Date;
-            ToDateTime = ToDateTime.Date.AddDays(1).Subtract(TimeSpan.FromSeconds(1));
 
-            VideoPicker vpicker = new VideoPicker(Config.UserName, Config.FilePath, Config.ClipLimit, FromDateTime, ToDateTime);
-            vpicker.ShowDialog();
+            if(Config.BearerToken == "")
+            {
+                MessageBox.Show("Since May 2020, Twitch requires Bearer token for HTTP requests. Please proceed to Login and obtain your own Twitch Login Token to use with Clip Downloader.");
+            }
+            else
+            {
+                JsonGrabber.ProvideBearerToken(Config.BearerToken);
+                //We don't want to deal with time - just dates, so round it up to first second of the day for "FromDateTime" and last second of the day for ToDateTime, this way if we choose same day in both fields, we pretty much ned up with entire day selected... UTC time.
+                FromDateTime = FromDateTime.Date;
+                ToDateTime = ToDateTime.Date.AddDays(1).Subtract(TimeSpan.FromSeconds(1));
 
+                VideoPicker vpicker = new VideoPicker(Config.UserName, Config.FilePath, Config.ClipLimit, FromDateTime, ToDateTime);
+                vpicker.ShowDialog();
+            }
+        }
 
+        private void B_TwitchLogin_Click(object sender, EventArgs e)
+        {
+            Forms.LoginSettings lgfrm = new Forms.LoginSettings(Config.BearerToken);
+            var result = lgfrm.ShowDialog();
+            if(result == DialogResult.OK)
+            {
+                if(lgfrm.BearerToken != "")
+                {
+                    Config.BearerToken = lgfrm.BearerToken;
+                    Config.Save();
+                }
+            }
         }
     }
 }

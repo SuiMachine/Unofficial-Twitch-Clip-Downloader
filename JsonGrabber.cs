@@ -17,7 +17,13 @@ namespace TwitchClipDownloader
     internal static class JsonGrabber
     {
         static KeyValuePair<string, string> clientIDHeader = new KeyValuePair<string, string>("Client-ID", "llyidmsqifdz79kqkegwtv5lt11h2c");
+        static KeyValuePair<string, string> BearerToken;
         static DateTime lastRequest = DateTime.UtcNow;
+
+        public static void ProvideBearerToken(string Token)
+        {
+            BearerToken = new KeyValuePair<string, string>("Authorization", "Bearer " + Token.Trim());
+        }
 
         public static Uri GetPathHelix(string endpoint, List<KeyValuePair<string, string>> queryStrings = null)
         {
@@ -83,6 +89,9 @@ namespace TwitchClipDownloader
                 while (!OffscreenBrowser.Browser.GetSourceAsync().GetAwaiter().GetResult().Contains(".mp4"))
                     System.Threading.Thread.Sleep(500);
 
+                System.Threading.Thread.Sleep(5000);
+
+                //This is broken now, cause Twitch
                 var qualities = OffscreenBrowser.Browser.EvaluateScriptAsync("player.getQualities()").GetAwaiter().GetResult();
                 var results = (List<object>)qualities.Result;
 
@@ -143,6 +152,7 @@ namespace TwitchClipDownloader
             {
                 HttpWebRequest wRequest = (HttpWebRequest)HttpWebRequest.Create(address);
                 headers.Add(clientIDHeader.Key, clientIDHeader.Value);
+                headers.Add(BearerToken.Key, BearerToken.Value);
 
                 //Headers
                 if (headers != null)

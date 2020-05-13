@@ -45,6 +45,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.link_TwitchLegal = new System.Windows.Forms.LinkLabel();
+            this.B_TwitchLogin = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NBS_ClipLimit)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -162,7 +163,7 @@
             0,
             0});
             this.NBS_ClipLimit.Name = "NBS_ClipLimit";
-            this.NBS_ClipLimit.Size = new System.Drawing.Size(153, 20);
+            this.NBS_ClipLimit.Size = new System.Drawing.Size(54, 20);
             this.NBS_ClipLimit.TabIndex = 13;
             // 
             // tableLayoutPanel1
@@ -176,14 +177,15 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 142F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(405, 194);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(405, 191);
             this.tableLayoutPanel1.TabIndex = 14;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.B_TwitchLogin);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.NBS_ClipLimit);
             this.panel1.Controls.Add(this.TB_Username);
@@ -200,24 +202,34 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(397, 134);
+            this.panel1.Size = new System.Drawing.Size(397, 136);
             this.panel1.TabIndex = 0;
             // 
             // link_TwitchLegal
             // 
             this.link_TwitchLegal.AutoSize = true;
-            this.link_TwitchLegal.Location = new System.Drawing.Point(4, 143);
+            this.link_TwitchLegal.Location = new System.Drawing.Point(4, 145);
             this.link_TwitchLegal.Name = "link_TwitchLegal";
             this.link_TwitchLegal.Size = new System.Drawing.Size(377, 39);
             this.link_TwitchLegal.TabIndex = 2;
             this.link_TwitchLegal.TabStop = true;
             this.link_TwitchLegal.Text = resources.GetString("link_TwitchLegal.Text");
             // 
+            // B_TwitchLogin
+            // 
+            this.B_TwitchLogin.Location = new System.Drawing.Point(116, 106);
+            this.B_TwitchLogin.Name = "B_TwitchLogin";
+            this.B_TwitchLogin.Size = new System.Drawing.Size(93, 23);
+            this.B_TwitchLogin.TabIndex = 14;
+            this.B_TwitchLogin.Text = "Twitch Login";
+            this.B_TwitchLogin.UseVisualStyleBackColor = true;
+            this.B_TwitchLogin.Click += new System.EventHandler(this.B_TwitchLogin_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(405, 194);
+            this.ClientSize = new System.Drawing.Size(405, 191);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -251,6 +263,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.LinkLabel link_TwitchLegal;
+        private System.Windows.Forms.Button B_TwitchLogin;
     }
 }
 

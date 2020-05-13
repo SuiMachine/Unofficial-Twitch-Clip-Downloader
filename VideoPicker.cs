@@ -132,7 +132,6 @@ namespace TwitchClipDownloader
 
         private void PerformGetVideosThread()
         {
-            
             VideoDownloader vd = new VideoDownloader(this);
 
             var twitchUsernameId = vd.GetBroadcasterID(UserName);

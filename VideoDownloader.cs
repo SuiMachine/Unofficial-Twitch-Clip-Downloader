@@ -139,7 +139,7 @@ namespace TwitchClipDownloader
         private Dictionary<string, string> GetIDToGameNameDictionary(string[] gameIDsArray)
         {
             Vp.InvokeStatusUpdate("Getting game names to translate game IDs...", System.Drawing.Color.Green);
-            var querryStrings = new List<KeyValuePair<string, string>>();
+            var querryStrings = new List<KeyValuePair<string, string>>() { };
             foreach(var gameId in gameIDsArray)
             {
                 querryStrings.Add(new KeyValuePair<string, string>("id", gameId));

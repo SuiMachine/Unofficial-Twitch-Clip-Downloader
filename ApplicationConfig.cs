@@ -14,6 +14,7 @@ namespace TwitchClipDownloader
         [XmlElement] public string UserName { get; set; }
         [XmlElement] public string FilePath { get; set; }
         [XmlElement] public uint ClipLimit { get; set; }
+        [XmlElement] public string BearerToken { get; set; }
 
         [XmlIgnore] static readonly string FILENAME = "Config.xml";
 
@@ -21,6 +22,7 @@ namespace TwitchClipDownloader
         public ApplicationConfig()
         {
             UserName = "";
+            BearerToken = "";
             FilePath = Path.Combine(Directory.GetCurrentDirectory(), "Clips");
             ClipLimit = 20;
         }
