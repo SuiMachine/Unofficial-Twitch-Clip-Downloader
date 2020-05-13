@@ -89,9 +89,17 @@ namespace TwitchClipDownloader
                 while (!OffscreenBrowser.Browser.GetSourceAsync().GetAwaiter().GetResult().Contains(".mp4"))
                     System.Threading.Thread.Sleep(500);
 
-                System.Threading.Thread.Sleep(5000);
+                var pageCode = OffscreenBrowser.Browser.GetSourceAsync().GetAwaiter().GetResult();
+                var mp4End = pageCode.IndexOf(".mp4") + 4;
+                pageCode = pageCode.Substring(0, mp4End);
+                var mp4Begin = pageCode.LastIndexOf("http");
+                var clipUrl = pageCode.Substring(mp4Begin);
+                return clipUrl;
 
-                //This is broken now, cause Twitch
+
+                //This is broken now, cause Twitch is fuckin' shit company
+
+                /*
                 var qualities = OffscreenBrowser.Browser.EvaluateScriptAsync("player.getQualities()").GetAwaiter().GetResult();
                 var results = (List<object>)qualities.Result;
 
@@ -119,7 +127,7 @@ namespace TwitchClipDownloader
                     }
                 }
 
-                return best.source;
+                return best.source;*/
             }
         }
 
