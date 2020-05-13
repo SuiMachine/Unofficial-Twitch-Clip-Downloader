@@ -76,6 +76,7 @@ namespace TwitchClipDownloader
         {
             using(var OffscreenBrowser = new OffscreenBrowser())
             {
+                string pageSource;
                 while (!OffscreenBrowser.Browser.IsBrowserInitialized)
                     System.Threading.Thread.Sleep(1);
 
@@ -86,14 +87,13 @@ namespace TwitchClipDownloader
                 while (OffscreenBrowser.Browser.IsLoading)
                     System.Threading.Thread.Sleep(100);
 
-                while (!OffscreenBrowser.Browser.GetSourceAsync().GetAwaiter().GetResult().Contains(".mp4"))
+                while (! (pageSource = OffscreenBrowser.Browser.GetSourceAsync().GetAwaiter().GetResult()).Contains(".mp4"))
                     System.Threading.Thread.Sleep(500);
 
-                var pageCode = OffscreenBrowser.Browser.GetSourceAsync().GetAwaiter().GetResult();
-                var mp4End = pageCode.IndexOf(".mp4") + 4;
-                pageCode = pageCode.Substring(0, mp4End);
-                var mp4Begin = pageCode.LastIndexOf("http");
-                var clipUrl = pageCode.Substring(mp4Begin);
+                var mp4End = pageSource.IndexOf(".mp4") + 4;
+                pageSource = pageSource.Substring(0, mp4End);
+                var mp4Begin = pageSource.LastIndexOf("http");
+                var clipUrl = pageSource.Substring(mp4Begin);
                 return clipUrl;
 
 
