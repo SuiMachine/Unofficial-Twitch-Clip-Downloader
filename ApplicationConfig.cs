@@ -24,7 +24,7 @@ namespace TwitchClipDownloader
             UserName = "";
             BearerToken = "";
             FilePath = Path.Combine(Directory.GetCurrentDirectory(), "Clips");
-            ClipLimit = 20;
+            ClipLimit = 0;
         }
 
         internal static ApplicationConfig Load()

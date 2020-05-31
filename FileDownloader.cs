@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -14,7 +15,7 @@ namespace TwitchClipDownloader
         public static void Download(TwitchVideo Video, string Directory_Path)
         {
 
-            using(WebClient wb = new WebClient())
+            using (WebClient wb = new WebClient())
             {
                 if (!Directory.Exists(Directory_Path))
                     Directory.CreateDirectory(Directory_Path);
@@ -23,7 +24,7 @@ namespace TwitchClipDownloader
                 var safeGameTitle = GetIOSafePath(Video.Game);
                 var safeClipName = GetIOSafePath(Video.ClipName);
                 var download_path = Path.Combine(Directory_Path, string.Format("{0} - {1} - {2}.mp4", dateWinFormat, safeGameTitle, safeClipName));
-                while(File.Exists(download_path))
+                while (File.Exists(download_path))
                 {
                     var dir = Path.GetDirectoryName(download_path);
                     var filename = Path.GetFileNameWithoutExtension(download_path) + new Random().Next(0, 10);
@@ -32,6 +33,25 @@ namespace TwitchClipDownloader
                 }
 
                 wb.DownloadFile(Video.DownloadUri.ToString(), download_path);
+            }
+        }
+
+        public static bool CheckIfExists(Uri file)
+        {
+            var request = (HttpWebRequest)WebRequest.Create(file);
+            request.Method = "HEAD";
+
+            HttpWebResponse response = null;
+            try
+            {
+                response = (HttpWebResponse)request.GetResponse();
+                response.Close();
+                return true;
+            }
+            catch (WebException exception)
+            {
+                Debug.WriteLine(exception);
+                return false;
             }
         }
 

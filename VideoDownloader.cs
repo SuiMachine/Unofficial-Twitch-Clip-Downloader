@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -70,6 +71,8 @@ namespace TwitchClipDownloader
                     var videosNode = dataNode.Children().First();
 
                     List<TwitchVideo> vids = new List<TwitchVideo>();
+
+                    //This is hopefully a safe boundry, cause even if you tell Twitch 100 clips, if some were removed, they'll return less to you.
                     if (isMoreThan100Clips && videosNode.Count() > 75)
                     {
                         var timeRange = ((ToDate - FromDate).TotalMinutes) / 2;
@@ -85,7 +88,10 @@ namespace TwitchClipDownloader
                             var game = videosNode.Children().ElementAt(i)["game_id"].ToString();
                             var title = videosNode.Children().ElementAt(i)["title"].ToString();
                             var previewLink = videosNode.Children().ElementAt(i)["url"].ToString();
-                            vids.Add(new TwitchVideo(id, date, title, game, new Uri(previewLink), null));
+                            var thumbnailUrl = videosNode.Children().ElementAt(i)["thumbnail_url"].ToString();
+                            var author = videosNode.Children().ElementAt(i)["creator_name"].ToString();
+
+                            vids.Add(new TwitchVideo(id, date, title, author, game, new Uri(previewLink), thumbnailUrl, null));
                         }
                     }
 
@@ -131,7 +137,14 @@ namespace TwitchClipDownloader
             foreach(var vid in vids)
             {
                 Vp.InvokeStatusUpdate(string.Format("Getting download link for video {0} / {1}", i, vids.Length), System.Drawing.Color.Green);
-                vid.DownloadUri = new Uri(GetDownloadLink(vid.ID));
+                var downloadUri = GetDownloadLink2(vid.ThumbnailUrl);
+                if (downloadUri != "")
+                    vid.DownloadUri = new Uri(downloadUri);
+                else
+                {
+                    MessageBox.Show(vid.ID + " failed to provide a download link.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    vid.Download = false;
+                }
                 i++;
             }
         }
@@ -177,14 +190,16 @@ namespace TwitchClipDownloader
             return new Dictionary<string, string>();
         }
 
-        private string GetDownloadLink(string SLUG)
+        private string GetDownloadLink2(string thumbnail_url)
         {
-            if (JsonGrabber.GrabClipJson(SLUG, out string res))
-            {
-                return res;
-            }
-
-            return "ERROR";
+            //This function is based on method from https://github.com/amiechen/twitch-batch-loader
+            var splicePoint = thumbnail_url.IndexOf("-preview-");
+            var mp4 = thumbnail_url.Substring(0, splicePoint) + ".mp4";
+            var result = FileDownloader.CheckIfExists(new Uri(mp4));
+            if(result == true)
+                return mp4;
+            else
+                return "";
         }
     }
 }
