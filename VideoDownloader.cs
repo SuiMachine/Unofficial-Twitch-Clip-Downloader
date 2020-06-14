@@ -90,8 +90,9 @@ namespace TwitchClipDownloader
                             var previewLink = videosNode.Children().ElementAt(i)["url"].ToString();
                             var thumbnailUrl = videosNode.Children().ElementAt(i)["thumbnail_url"].ToString();
                             var author = videosNode.Children().ElementAt(i)["creator_name"].ToString();
+                            var view_count = ParseSafer(videosNode.Children().ElementAt(i)["view_count"].ToString());
 
-                            vids.Add(new TwitchVideo(id, date, title, author, game, new Uri(previewLink), thumbnailUrl, null));
+                            vids.Add(new TwitchVideo(id, date, title, author, game, new Uri(previewLink), thumbnailUrl, view_count, null));
                         }
                     }
 
@@ -105,6 +106,15 @@ namespace TwitchClipDownloader
             }
             Vp.InvokeStatusUpdate("Failed to receive response...", System.Drawing.Color.Red);
             return null;
+        }
+
+        private int ParseSafer(string text)
+        {
+            if(int.TryParse(text, out int parsedValue))
+            {
+                return parsedValue;
+            }
+            return 0;
         }
 
         public void TranslateGameIDsToNames(TwitchVideo[] vids)

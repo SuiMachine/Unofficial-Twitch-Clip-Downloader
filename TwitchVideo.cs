@@ -17,11 +17,12 @@ namespace TwitchClipDownloader
         public string Author { get; set; }
         public string Game { get; set; }
         public string ID { get; set; }
+        public int View_count { get; set; }
         public string ThumbnailUrl { get; set; }
 
         public static readonly int COLUMNCOUNT = 5;
 
-        public TwitchVideo(string ID, string CreationDate, string ClipName, string Author, string Game, Uri PreviewUri, string ThumbnailUrl,  Uri DownloadUri)
+        public TwitchVideo(string ID, string CreationDate, string ClipName, string Author, string Game, Uri PreviewUri, string ThumbnailUrl, int View_count,  Uri DownloadUri)
         {
             this.ID = ID;
             this.CreationDate = DateTime.Parse(CreationDate);
@@ -31,6 +32,7 @@ namespace TwitchClipDownloader
             this.PreviewUri = PreviewUri;
             this.ThumbnailUrl = ThumbnailUrl;
             this.DownloadUri = DownloadUri;
+            this.View_count = View_count;
             this.Download = true;
         }
     }

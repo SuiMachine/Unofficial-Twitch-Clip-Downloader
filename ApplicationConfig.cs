@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,13 @@ using System.Xml.Serialization;
 
 namespace TwitchClipDownloader
 {
+    public enum SortByEnum
+    {
+        [Description("Creation date (Default)")] CreationDate,
+        [Description("Views")] Views,
+        [Description("Name")] Name
+    }
+
     [Serializable]
     public class ApplicationConfig
     {
@@ -15,6 +23,8 @@ namespace TwitchClipDownloader
         [XmlElement] public string FilePath { get; set; }
         [XmlElement] public uint ClipLimit { get; set; }
         [XmlElement] public string BearerToken { get; set; }
+        [XmlElement] public SortByEnum SortBy { get; set; }
+        [XmlElement] public bool SortByDesc { get; set; }
 
         [XmlIgnore] static readonly string FILENAME = "Config.xml";
 
@@ -25,6 +35,8 @@ namespace TwitchClipDownloader
             BearerToken = "";
             FilePath = Path.Combine(Directory.GetCurrentDirectory(), "Clips");
             ClipLimit = 0;
+            SortBy = SortByEnum.CreationDate;
+            SortByDesc = false;
         }
 
         internal static ApplicationConfig Load()

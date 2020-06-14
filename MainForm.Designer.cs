@@ -1,4 +1,8 @@
-﻿namespace TwitchClipDownloader
+﻿using System;
+using System.ComponentModel;
+using System.Linq;
+
+namespace TwitchClipDownloader
 {
     partial class MainForm
     {
@@ -28,6 +32,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.label1 = new System.Windows.Forms.Label();
             this.TB_Username = new System.Windows.Forms.TextBox();
@@ -44,8 +49,12 @@
             this.NBS_ClipLimit = new System.Windows.Forms.NumericUpDown();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.link_TwitchLegal = new System.Windows.Forms.LinkLabel();
+            this.CBox_SortBy = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.B_TwitchLogin = new System.Windows.Forms.Button();
+            this.link_TwitchLegal = new System.Windows.Forms.LinkLabel();
+            this.toolTip_Hint = new System.Windows.Forms.ToolTip(this.components);
+            this.CB_SortDesc = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.NBS_ClipLimit)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -101,7 +110,7 @@
             // 
             // B_GetClips
             // 
-            this.B_GetClips.Location = new System.Drawing.Point(314, 106);
+            this.B_GetClips.Location = new System.Drawing.Point(314, 137);
             this.B_GetClips.Name = "B_GetClips";
             this.B_GetClips.Size = new System.Drawing.Size(75, 23);
             this.B_GetClips.TabIndex = 7;
@@ -111,7 +120,7 @@
             // 
             // B_SaveUsername
             // 
-            this.B_SaveUsername.Location = new System.Drawing.Point(215, 106);
+            this.B_SaveUsername.Location = new System.Drawing.Point(215, 137);
             this.B_SaveUsername.Name = "B_SaveUsername";
             this.B_SaveUsername.Size = new System.Drawing.Size(93, 23);
             this.B_SaveUsername.TabIndex = 8;
@@ -122,22 +131,22 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 83);
+            this.label4.Location = new System.Drawing.Point(3, 111);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(117, 13);
+            this.label4.Size = new System.Drawing.Size(82, 13);
             this.label4.TabIndex = 9;
-            this.label4.Text = "Default download path:";
+            this.label4.Text = "Download path:";
             // 
             // TB_DefaulthPath
             // 
-            this.TB_DefaulthPath.Location = new System.Drawing.Point(126, 80);
+            this.TB_DefaulthPath.Location = new System.Drawing.Point(91, 108);
             this.TB_DefaulthPath.Name = "TB_DefaulthPath";
-            this.TB_DefaulthPath.Size = new System.Drawing.Size(182, 20);
+            this.TB_DefaulthPath.Size = new System.Drawing.Size(217, 20);
             this.TB_DefaulthPath.TabIndex = 10;
             // 
             // B_BrowsePath
             // 
-            this.B_BrowsePath.Location = new System.Drawing.Point(314, 78);
+            this.B_BrowsePath.Location = new System.Drawing.Point(314, 108);
             this.B_BrowsePath.Name = "B_BrowsePath";
             this.B_BrowsePath.Size = new System.Drawing.Size(75, 23);
             this.B_BrowsePath.TabIndex = 11;
@@ -148,7 +157,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 110);
+            this.label5.Location = new System.Drawing.Point(3, 142);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(47, 13);
             this.label5.TabIndex = 12;
@@ -156,7 +165,7 @@
             // 
             // NBS_ClipLimit
             // 
-            this.NBS_ClipLimit.Location = new System.Drawing.Point(56, 108);
+            this.NBS_ClipLimit.Location = new System.Drawing.Point(56, 139);
             this.NBS_ClipLimit.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -165,6 +174,8 @@
             this.NBS_ClipLimit.Name = "NBS_ClipLimit";
             this.NBS_ClipLimit.Size = new System.Drawing.Size(54, 20);
             this.NBS_ClipLimit.TabIndex = 13;
+            this.toolTip_Hint.SetToolTip(this.NBS_ClipLimit, "Setting clip limit to 0 is equal to no limit (although it may take a significent " +
+        "amount of time to gather clips due to multiple requests needed)");
             // 
             // tableLayoutPanel1
             // 
@@ -177,14 +188,17 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 142F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 173F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(405, 191);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(405, 224);
             this.tableLayoutPanel1.TabIndex = 14;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.CB_SortDesc);
+            this.panel1.Controls.Add(this.CBox_SortBy);
+            this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.B_TwitchLogin);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.NBS_ClipLimit);
@@ -202,22 +216,29 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(397, 136);
+            this.panel1.Size = new System.Drawing.Size(397, 167);
             this.panel1.TabIndex = 0;
             // 
-            // link_TwitchLegal
+            // CBox_SortBy
             // 
-            this.link_TwitchLegal.AutoSize = true;
-            this.link_TwitchLegal.Location = new System.Drawing.Point(4, 145);
-            this.link_TwitchLegal.Name = "link_TwitchLegal";
-            this.link_TwitchLegal.Size = new System.Drawing.Size(377, 39);
-            this.link_TwitchLegal.TabIndex = 2;
-            this.link_TwitchLegal.TabStop = true;
-            this.link_TwitchLegal.Text = resources.GetString("link_TwitchLegal.Text");
+            this.CBox_SortBy.FormattingEnabled = true;
+            this.CBox_SortBy.Location = new System.Drawing.Point(52, 81);
+            this.CBox_SortBy.Name = "CBox_SortBy";
+            this.CBox_SortBy.Size = new System.Drawing.Size(248, 21);
+            this.CBox_SortBy.TabIndex = 16;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(3, 84);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(43, 13);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "Sort by:";
             // 
             // B_TwitchLogin
             // 
-            this.B_TwitchLogin.Location = new System.Drawing.Point(116, 106);
+            this.B_TwitchLogin.Location = new System.Drawing.Point(116, 137);
             this.B_TwitchLogin.Name = "B_TwitchLogin";
             this.B_TwitchLogin.Size = new System.Drawing.Size(93, 23);
             this.B_TwitchLogin.TabIndex = 14;
@@ -225,11 +246,37 @@
             this.B_TwitchLogin.UseVisualStyleBackColor = true;
             this.B_TwitchLogin.Click += new System.EventHandler(this.B_TwitchLogin_Click);
             // 
+            // link_TwitchLegal
+            // 
+            this.link_TwitchLegal.AutoSize = true;
+            this.link_TwitchLegal.Location = new System.Drawing.Point(4, 176);
+            this.link_TwitchLegal.Name = "link_TwitchLegal";
+            this.link_TwitchLegal.Size = new System.Drawing.Size(377, 39);
+            this.link_TwitchLegal.TabIndex = 2;
+            this.link_TwitchLegal.TabStop = true;
+            this.link_TwitchLegal.Text = resources.GetString("link_TwitchLegal.Text");
+            // 
+            // toolTip_Hint
+            // 
+            this.toolTip_Hint.IsBalloon = true;
+            this.toolTip_Hint.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.toolTip_Hint.ToolTipTitle = "Hint";
+            // 
+            // CB_SortDesc
+            // 
+            this.CB_SortDesc.AutoSize = true;
+            this.CB_SortDesc.Location = new System.Drawing.Point(306, 83);
+            this.CB_SortDesc.Name = "CB_SortDesc";
+            this.CB_SortDesc.Size = new System.Drawing.Size(83, 17);
+            this.CB_SortDesc.TabIndex = 17;
+            this.CB_SortDesc.Text = "Descending";
+            this.CB_SortDesc.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(405, 191);
+            this.ClientSize = new System.Drawing.Size(405, 224);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -244,6 +291,19 @@
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
+        }
+
+        private void AddComboboxDataSources()
+        {
+            CBox_SortBy.DisplayMember = "Description";
+            CBox_SortBy.ValueMember = "value";
+            CBox_SortBy.DataSource = Enum.GetValues(typeof(SortByEnum)).Cast<Enum>().Select(value =>
+            new
+            {
+                (Attribute.GetCustomAttribute(value.GetType().GetField(value.ToString()),
+                typeof(DescriptionAttribute)) as DescriptionAttribute).Description,
+                value
+            }).ToList();
         }
 
         #endregion
@@ -264,6 +324,10 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.LinkLabel link_TwitchLegal;
         private System.Windows.Forms.Button B_TwitchLogin;
+        private System.Windows.Forms.ToolTip toolTip_Hint;
+        private System.Windows.Forms.ComboBox CBox_SortBy;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox CB_SortDesc;
     }
 }
 

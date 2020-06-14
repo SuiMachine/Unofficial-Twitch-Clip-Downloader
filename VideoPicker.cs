@@ -20,15 +20,15 @@ namespace TwitchClipDownloader
         DateTime FromDateTime;
         DateTime ToDateTime;
         TwitchVideo[] videos;
+        SortByEnum SortBy;
+        bool SortByDesc;
 
         Thread workerThread;
         public delegate void StatusUpdateDelagate(string text, Color color);
         public delegate void SetupTableDelegate(TwitchVideo[] videos);
         public delegate void SetCompleteDelegate();
 
-
-
-        public VideoPicker(string UserName, string Path, uint ClipLimit, DateTime FromDateTime, DateTime ToDateTime)
+        public VideoPicker(string UserName, string Path, uint ClipLimit, DateTime FromDateTime, DateTime ToDateTime, SortByEnum SortBy, bool SortByDesc)
         {
             InitializeComponent();
             this.UserName = UserName;
@@ -36,6 +36,8 @@ namespace TwitchClipDownloader
             this.ClipLimit = ClipLimit;
             this.FromDateTime = FromDateTime;
             this.ToDateTime = ToDateTime;
+            this.SortBy = SortBy;
+            this.SortByDesc = SortByDesc;
         }
 
         private void VideoPicker_Load(object sender, EventArgs e)
@@ -165,7 +167,21 @@ namespace TwitchClipDownloader
 
             //Sort by time
             InvokeStatusUpdate("Sorting...", Color.Blue);
-            videos = videos.OrderBy(x => x.CreationDate).ToArray();
+            switch(SortBy)
+            {
+                case SortByEnum.CreationDate:
+                    videos = SortByDesc ? videos.OrderByDescending(x => x.CreationDate).ToArray() : videos.OrderBy(x => x.CreationDate).ToArray();
+                    break;
+                case SortByEnum.Name:
+                    videos = SortByDesc ? videos.OrderByDescending(x => x.ClipName).ToArray() : videos.OrderBy(x => x.ClipName).ToArray();
+                    break;
+                case SortByEnum.Views:
+                    videos = SortByDesc ? videos.OrderByDescending(x => x.View_count).ToArray() : videos.OrderBy(x => x.View_count).ToArray();
+                    break;
+                default:
+                    videos = SortByDesc ? videos.OrderByDescending(x => x.CreationDate).ToArray() : videos.OrderBy(x => x.CreationDate).ToArray();
+                    break;
+            }
 
             //Sets up table with videos
             InvokeSetupTable(videos);
@@ -215,7 +231,7 @@ namespace TwitchClipDownloader
             for(int i=0; i<downloadList.Count; i++)
             {
                 InvokeStatusUpdate(string.Format("Downloading video {0} / {1}", i + 1, downloadList.Count), Color.DarkGray);
-                FileDownloader.Download(downloadList[i], Path);
+                FileDownloader.Download(i, downloadList[i], Path);
             }
 
             InvokeStatusUpdate("Done. Awaiting user input.", Color.DarkGray);

@@ -32,12 +32,17 @@ namespace TwitchClipDownloader
             FromDateTime = DateTime.UtcNow - TimeSpan.FromDays(DateTime.DaysInMonth(DateTime.UtcNow.Year, DateTime.UtcNow.Month));
             ToDateTime = DateTime.UtcNow;
 
+            //AddCombobox sources
+            this.AddComboboxDataSources();
+
             //Setup bindings
             TB_Username.DataBindings.Add("Text", Config, "UserName", false, DataSourceUpdateMode.OnPropertyChanged);
             TB_DefaulthPath.DataBindings.Add("Text", Config, "FilePath", false, DataSourceUpdateMode.OnPropertyChanged);
             dateTimePicker_FromDateTime.DataBindings.Add("Value", this, "FromDateTime", false, DataSourceUpdateMode.OnPropertyChanged);
             dateTimePicker_ToDateTime.DataBindings.Add("Value", this, "ToDateTime", false, DataSourceUpdateMode.OnPropertyChanged);
             NBS_ClipLimit.DataBindings.Add("Value", Config, "ClipLimit", false, DataSourceUpdateMode.OnPropertyChanged);
+            CBox_SortBy.DataBindings.Add("SelectedValue", Config, "SortBy", false, DataSourceUpdateMode.OnPropertyChanged);
+            CB_SortDesc.DataBindings.Add("Checked", Config, "SortByDesc", false, DataSourceUpdateMode.OnPropertyChanged);
 
             //Legal link stuff
             link_TwitchLegal.LinkClicked += (send, arg) => { Process.Start("https://www.twitch.tv/p/legal/trademark/"); };
@@ -68,7 +73,6 @@ namespace TwitchClipDownloader
 
         private void B_GetClips_Click(object sender, EventArgs e)
         {
-
             if(Config.BearerToken == "")
             {
                 MessageBox.Show("Since May 2020, Twitch requires Bearer token for HTTP requests. Please proceed to Login and obtain your own Twitch Login Token to use with Clip Downloader.");
@@ -80,7 +84,7 @@ namespace TwitchClipDownloader
                 FromDateTime = FromDateTime.Date;
                 ToDateTime = ToDateTime.Date.AddDays(1).Subtract(TimeSpan.FromSeconds(1));
 
-                VideoPicker vpicker = new VideoPicker(Config.UserName, Config.FilePath, Config.ClipLimit, FromDateTime, ToDateTime);
+                VideoPicker vpicker = new VideoPicker(Config.UserName, Config.FilePath, Config.ClipLimit, FromDateTime, ToDateTime, (SortByEnum)CBox_SortBy.SelectedValue, CB_SortDesc.Checked);
                 vpicker.ShowDialog();
             }
         }

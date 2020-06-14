@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="toolTip_Hint.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <data name="link_TwitchLegal.Text" xml:space="preserve">
     <value>Twitch is a registered trademark of Twitch Interactive, Inc. This is an unofficial program and is not sponsored or affiliated with Twitch in any way. For more information, see - https://www.twitch.tv/p/legal/trademark/</value>
   </data>
