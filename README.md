@@ -5,7 +5,6 @@ Credits
 -------
   * [SuicideMachine](http://twitch.tv/suicidemachine)
   * Json.NET written by [Newtonsoft](https://www.newtonsoft.com/json).
-  * [Chromium via CefSharp](https://github.com/cefsharp/CefSharp/)
   
 Additional legal stuff
 -------
