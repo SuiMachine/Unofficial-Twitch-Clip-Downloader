@@ -1,6 +1,8 @@
 # Unofficial Twitch Clip Downloader
 An unofficial tool to simply downloading clips from Twitch.
 
+This is now depricated, but you should check: https://github.com/lay295/TwitchDownloader
+
 Credits
 -------
   * [SuicideMachine](http://twitch.tv/suicidemachine)
